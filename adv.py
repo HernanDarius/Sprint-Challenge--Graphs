@@ -29,6 +29,49 @@ player = Player(world.starting_room)
 # traversal_path = ['n', 'n']
 traversal_path = []
 
+backwards = {
+    'n': 's',
+    's': 'n',
+    'w': 'e',
+    'e': 'w'
+}
+
+"""
+print(player.current_room.get_exits())
+neighbors = []
+for move in player.current_room.get_exits():
+    player.travel(move)
+    back = backwards[move]
+    neighbors.append(player.current_room.id)    
+    player.travel(back)
+print(neighbors)
+"""
+
+visited = {}
+
+reverse = []
+
+visited[player.current_room.id] = player.current_room.get_exits()
+
+while len(visited) < 500:
+    if player.current_room.id not in visited:
+        visited[player.current_room.id] = player.current_room.get_exits()
+        prev_move = reverse[-1]
+        if prev_move in visited[player.current_room.id]:
+            visited[player.current_room.id].remove(prev_move)
+
+    if len(visited[player.current_room.id]) > 0:
+        move = visited[player.current_room.id][-1]
+        visited[player.current_room.id].pop()
+        traversal_path.append(move)
+        reverse.append(backwards[move])
+        player.travel(move)
+
+    else:
+        prev_move = reverse[-1]
+        reverse.pop()
+        traversal_path.append(prev_move)
+        player.travel(prev_move)
 
 
 # TRAVERSAL TEST - DO NOT MODIFY
